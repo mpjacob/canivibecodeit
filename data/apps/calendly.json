@@ -1,0 +1,20 @@
+{
+  "slug": "calendly",
+  "name": "Calendly",
+  "domain": "calendly.com",
+  "category": "productivity",
+  "priceMonthly": 10,
+  "verdict": "yes",
+  "whatYouLose": [
+    "Google/Outlook calendar two-way sync",
+    "Team scheduling and round-robin",
+    "Payment collection on booking",
+    "Workflow automations (reminders, follow-ups)"
+  ],
+  "priorArt": [
+    { "title": "Cal.com — open-source scheduling", "url": "https://github.com/calcom/cal.com" },
+    { "title": "Easy!Appointments — web scheduler", "url": "https://github.com/alextselegidis/easyappointments" }
+  ],
+  "prompt": "Build a scheduling app with: user sets weekly availability (day/time slots), public booking page at /book/:username, visitor picks a slot and enters name/email, confirmation email via Resend, bookings stored in SQLite, admin view of upcoming/past bookings, and timezone support. No calendar sync needed for v1.",
+  "notes": "Cal.com exists and is excellent. A basic booking page is one of the easiest SaaS apps to vibecode."
+}

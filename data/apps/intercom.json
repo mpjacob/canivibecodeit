@@ -1,0 +1,20 @@
+{
+  "slug": "intercom",
+  "name": "Intercom",
+  "domain": "intercom.com",
+  "category": "support",
+  "priceMonthly": 74,
+  "verdict": "yes",
+  "whatYouLose": [
+    "AI-powered auto-responses",
+    "Product tours and onboarding flows",
+    "Multi-channel inbox (email, SMS, social)",
+    "Customer data platform and segmentation"
+  ],
+  "priorArt": [
+    { "title": "Chatwoot — open-source customer support", "url": "https://github.com/chatwoot/chatwoot" },
+    { "title": "Papercups — live chat for startups", "url": "https://github.com/papercups-io/papercups" }
+  ],
+  "prompt": "Build a live chat widget for websites with: embeddable JS snippet, real-time chat via WebSockets, agent dashboard showing open conversations, canned responses, visitor info (page URL, browser), chat history, and email fallback when agents are offline. Node.js + SQLite backend, simple admin panel.",
+  "notes": "A basic live chat widget is very achievable. Intercom's AI, product tours, and omnichannel are the expensive parts."
+}

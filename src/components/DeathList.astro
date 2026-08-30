@@ -1,0 +1,67 @@
+---
+import type { App } from '../lib/types';
+import { VERDICT_LABELS, CATEGORY_EMOJI } from '../lib/types';
+import { formatPrice } from '../lib/apps';
+
+interface Props {
+  apps: (App & { votes: number })[];
+}
+
+const { apps } = Astro.props;
+---
+
+<section class="reveal" id="death-list">
+  <h2 class="section-title" style="font-size: 1.5rem; text-transform: none; letter-spacing: 0; color: var(--text); margin-bottom: 0.25rem;">
+    ☠️ The Death List
+  </h2>
+  <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+    SaaS apps ranked by "I replaced this" votes. Higher = more vibecoded.
+  </p>
+
+  <div style="overflow-x: auto;">
+    <table class="death-list" id="death-list-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>App</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Verdict</th>
+          <th>Votes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {apps.map((app, i) => (
+          <tr
+            data-name={app.name.toLowerCase()}
+            data-category={app.category}
+            data-slug={app.slug}
+          >
+            <td class="mono" style="color: var(--text-dim);">{i + 1}</td>
+            <td>
+              <a href={`/${app.slug}`} class="app-link">
+                <img
+                  class="favicon"
+                  src={`https://www.google.com/s2/favicons?domain=${app.domain}&sz=32`}
+                  alt=""
+                  width="20"
+                  height="20"
+                  loading="lazy"
+                />
+                {app.name}
+              </a>
+            </td>
+            <td class="mono" style="font-size: 0.8rem; color: var(--text-muted);">
+              {CATEGORY_EMOJI[app.category] ?? ''} {app.category.replace(/-/g, ' ')}
+            </td>
+            <td class="mono" style="font-size: 0.85rem;">{formatPrice(app.priceMonthly)}</td>
+            <td>
+              <span class={`badge badge-${app.verdict}`}>{VERDICT_LABELS[app.verdict]}</span>
+            </td>
+            <td class="vote-count">{app.votes > 0 ? app.votes : '—'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -1,0 +1,20 @@
+{
+  "slug": "mixpanel",
+  "name": "Mixpanel",
+  "domain": "mixpanel.com",
+  "category": "analytics",
+  "priceMonthly": 28,
+  "verdict": "yes",
+  "whatYouLose": [
+    "Automatic event schema inference",
+    "Funnel and retention cohort analysis",
+    "A/B test statistical engine",
+    "Data warehouse integrations"
+  ],
+  "priorArt": [
+    { "title": "Plausible — privacy-friendly analytics", "url": "https://github.com/plausible/analytics" },
+    { "title": "PostHog — open-source product analytics", "url": "https://github.com/PostHog/posthog" }
+  ],
+  "prompt": "Build a simple analytics dashboard with: JS tracking snippet that sends pageview and custom events, server endpoint that stores events in SQLite, dashboard showing pageviews over time (line chart), top pages table, custom event counts, and unique visitor estimates via cookie. No cookies banner needed for first-party analytics.",
+  "notes": "Basic event tracking and dashboards are very vibecodable. Mixpanel's funnel analysis and cohort retention are harder but PostHog proves it's possible open-source."
+}

@@ -1,0 +1,20 @@
+{
+  "slug": "notion",
+  "name": "Notion",
+  "domain": "notion.so",
+  "category": "productivity",
+  "priceMonthly": 10,
+  "verdict": "kinda",
+  "whatYouLose": [
+    "Real-time multiplayer cursors",
+    "Mobile apps with offline sync",
+    "Template marketplace",
+    "Enterprise SSO and audit logs"
+  ],
+  "priorArt": [
+    { "title": "AppFlowy — open-source Notion clone", "url": "https://github.com/AppFlowy-IO/AppFlowy" },
+    { "title": "AFFiNE — local-first workspace", "url": "https://github.com/toeverything/AFFiNE" }
+  ],
+  "prompt": "Build a Notion-like workspace app with: block-based rich text editor (headings, lists, toggles, code blocks), nested pages in a sidebar tree, slash commands for inserting blocks, markdown shortcuts, full-text search across pages, dark/light mode, and SQLite persistence. Use TipTap or ProseMirror for the editor. No auth needed — single-user local app. Astro + vanilla JS frontend, Node API.",
+  "notes": "The editor is the hard part. A single-user wiki with block editing is very doable; real-time collab and mobile are not."
+}

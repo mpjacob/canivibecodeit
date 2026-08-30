@@ -1,0 +1,20 @@
+{
+  "slug": "linear",
+  "name": "Linear",
+  "domain": "linear.app",
+  "category": "project-management",
+  "priceMonthly": 8,
+  "verdict": "kinda",
+  "whatYouLose": [
+    "Sub-100ms UI performance polish",
+    "GitHub/GitLab bidirectional sync",
+    "Cycles and roadmap views",
+    "Keyboard shortcut muscle memory"
+  ],
+  "priorArt": [
+    { "title": "Plane — open-source Linear alternative", "url": "https://github.com/makeplane/plane" },
+    { "title": "Huly — all-in-one PM platform", "url": "https://github.com/hcengineering/platform" }
+  ],
+  "prompt": "Build a Linear-style issue tracker with: kanban board and list views, issue creation with title/description/priority/assignee/status labels, keyboard shortcuts (C to create, J/K to navigate), command palette (Cmd+K), project grouping, filters by status/assignee/label, activity timeline per issue, and dark mode. SQLite backend, REST API, React or vanilla JS frontend with snappy transitions.",
+  "notes": "Core issue tracking is straightforward. Linear's speed and polish come from years of iteration — your v1 will feel slower but work fine for small teams."
+}

@@ -1,0 +1,20 @@
+{
+  "slug": "stripe-dashboard",
+  "name": "Stripe Dashboard",
+  "domain": "stripe.com",
+  "category": "finance",
+  "priceMonthly": 0,
+  "verdict": "no",
+  "whatYouLose": [
+    "PCI compliance and fraud detection",
+    "Global payment method support",
+    "Dispute handling and chargeback protection",
+    "Revenue recognition and tax automation"
+  ],
+  "priorArt": [
+    { "title": "Medusa — open-source commerce", "url": "https://github.com/medusajs/medusa" },
+    { "title": "Lago — open-source billing", "url": "https://github.com/getlago/lago" }
+  ],
+  "prompt": "Build a payment dashboard that shows: list of transactions with status/amount/date, revenue chart (last 30 days), customer list, and a simple checkout page using Stripe's API. Read-only dashboard — all payments go through Stripe. Do NOT build your own payment processor.",
+  "notes": "You don't replace Stripe — you replace the dashboard UI on top of it. Building actual payment processing is a hard no."
+}

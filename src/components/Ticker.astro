@@ -1,0 +1,112 @@
+---
+import type { App } from '../lib/types';
+import { formatPrice } from '../lib/apps';
+
+interface Props {
+  mrr: number;
+  apps: App[];
+}
+
+const { mrr, apps } = Astro.props;
+
+const mrrStr = mrr.toLocaleString('en-US');
+const digits = mrrStr.split('');
+
+// Build ticker tape items (duplicate for seamless loop)
+const tapeItems = apps.map((app) => ({
+  name: app.name,
+  price: app.priceMonthly,
+}));
+const tapeHtml = [...tapeItems, ...tapeItems];
+---
+
+<div class="ticker-wrap">
+  <div class="ticker-mrr">
+    <span class="ticker-mrr-label">Collective MRR Destroyed:</span>
+    <div class="odometer" id="mrr-odometer" data-target={mrr}>
+      <span class="odometer-char">$</span>
+      {digits.map((d, i) => (
+        d === ',' ? (
+          <span class="odometer-char">{d}</span>
+        ) : (
+          <span class="odometer-digit" data-digit={d} data-index={i}>
+            <span class="odometer-digit-inner">
+              {Array.from({ length: 10 }, (_, n) => (
+                <span class="odometer-char">{n}</span>
+              ))}
+            </span>
+          </span>
+        )
+      ))}
+      <span class="odometer-char">/mo</span>
+    </div>
+  </div>
+  <div class="ticker-tape">
+    <div class="ticker-tape-inner">
+      {tapeHtml.map((item) => (
+        <span class="ticker-item">
+          <span>{item.name}</span>
+          <span class="price">{formatPrice(item.price)}</span>
+          <span class="saved">→ $0</span>
+        </span>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  function initOdometer() {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const odometer = document.getElementById('mrr-odometer');
+    if (!odometer) return;
+
+    const target = parseInt(odometer.dataset.target ?? '0', 10);
+    const digitEls = odometer.querySelectorAll('.odometer-digit');
+
+    if (prefersReduced) {
+      digitEls.forEach((el) => {
+        const digit = el.getAttribute('data-digit');
+        const inner = el.querySelector('.odometer-digit-inner') as HTMLElement;
+        if (inner && digit) {
+          inner.style.transform = `translateY(-${parseInt(digit, 10) * 1.2}em)`;
+        }
+      });
+      return;
+    }
+
+    // Animate from 0 to target
+    const duration = 2000;
+    const start = performance.now();
+
+    function animate(now: number) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(target * eased);
+
+      const currentStr = current.toLocaleString('en-US');
+      const targetStr = target.toLocaleString('en-US');
+
+      let digitIdx = 0;
+      for (let i = 0; i < targetStr.length; i++) {
+        const ch = targetStr[i];
+        if (ch === ',') continue;
+        const el = digitEls[digitIdx] as HTMLElement;
+        const inner = el?.querySelector('.odometer-digit-inner') as HTMLElement;
+        const currentCh = currentStr.replace(/,/g, '')[digitIdx] ?? '0';
+        if (inner) {
+          inner.style.transform = `translateY(-${parseInt(currentCh, 10) * 1.2}em)`;
+        }
+        digitIdx++;
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  initOdometer();
+</script>

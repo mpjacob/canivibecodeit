@@ -1,0 +1,20 @@
+{
+  "slug": "slack",
+  "name": "Slack",
+  "domain": "slack.com",
+  "category": "communication",
+  "priceMonthly": 8,
+  "verdict": "kinda",
+  "whatYouLose": [
+    "Reliable message delivery at scale",
+    "Threading, reactions, and rich embeds",
+    "App integrations and bot framework",
+    "Search across all channels and files"
+  ],
+  "priorArt": [
+    { "title": "Mattermost — open-source Slack", "url": "https://github.com/mattermost/mattermost" },
+    { "title": "Zulip — threaded chat", "url": "https://github.com/zulip/zulip" }
+  ],
+  "prompt": "Build a team chat app with: channels and DMs, real-time messaging via WebSockets, message history with timestamps, user avatars, @mentions, emoji reactions, file upload (images), unread badges, and a sidebar channel list. SQLite for messages, Node.js + ws for real-time. Simple auth with username/password.",
+  "notes": "A basic chat for 5-10 people is very vibecodable. Slack's reliability, search, and integrations are not."
+}
