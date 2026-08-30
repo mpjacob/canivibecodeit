@@ -1,0 +1,20 @@
+{
+  "slug": "hubspot",
+  "name": "HubSpot",
+  "domain": "hubspot.com",
+  "category": "crm",
+  "priceMonthly": 45,
+  "verdict": "kinda",
+  "whatYouLose": [
+    "Marketing automation sequences",
+    "Sales pipeline forecasting",
+    "Meeting scheduler and email tracking",
+    "Free CRM with 1M contact limit"
+  ],
+  "priorArt": [
+    { "title": "Twenty — open-source CRM", "url": "https://github.com/twentyhq/twenty" },
+    { "title": "Erxes — experience management OS", "url": "https://github.com/erxes/erxes" }
+  ],
+  "prompt": "Build a CRM with: contact list (name, email, company, phone, tags), deal pipeline with drag-and-drop kanban stages, activity log per contact (notes, calls, emails), search and filter contacts, CSV import/export, and a dashboard showing deals by stage and total pipeline value. SQLite backend, clean table UI.",
+  "notes": "A basic CRM is very vibecodable — it's contacts + a kanban board. HubSpot's marketing automation and integrations are the moat."
+}

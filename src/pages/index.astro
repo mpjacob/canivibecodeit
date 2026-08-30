@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DeathList from '../components/DeathList.astro';
+import { getDeathList, getCategories } from '../lib/apps';
+import { CATEGORIES } from '../lib/types';
+import { websiteJsonLd, organizationJsonLd, itemListJsonLd } from '../lib/seo';
+
+const deathList = getDeathList();
+const categories = getCategories();
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://canivibecodeit.com';
+
+const jsonLd = [
+  websiteJsonLd(siteUrl),
+  organizationJsonLd(siteUrl),
+  itemListJsonLd(siteUrl),
+];
+---
+
+<BaseLayout
+  title="Can I Vibecode It? — Replace SaaS with One AI Prompt"
+  description="The honest directory answering whether you can replace paid SaaS apps with one AI coding prompt. Search, compare, and start vibecoding."
+  canonical={siteUrl}
+  jsonLd={jsonLd}
+>
+  <section class="search-hero">
+    <h1>Can I <span style="color: var(--green);">Vibecode</span> It?</h1>
+    <p class="subtitle">// replace paid SaaS with one AI prompt</p>
+
+    <div class="search-input-wrap">
+      <span class="search-icon">&gt;_</span>
+      <input
+        type="search"
+        id="search-input"
+        class="search-input"
+        placeholder="Search apps... (Notion, Slack, Figma)"
+        autocomplete="off"
+        aria-label="Search SaaS apps"
+      />
+    </div>
+
+    <div class="chips" id="category-chips">
+      <button class="chip active" data-category="all">All</button>
+      {categories.map((cat) => (
+        <button class="chip" data-category={cat}>
+          {CATEGORIES[cat] ?? cat}
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <DeathList apps={deathList} />
+</BaseLayout>
+
+<script>
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const chips = document.querySelectorAll('.chip');
+  const rows = document.querySelectorAll('#death-list-table tbody tr');
+
+  let activeCategory = 'all';
+
+  function filterRows() {
+    const query = searchInput?.value.toLowerCase().trim() ?? '';
+
+    rows.forEach((row) => {
+      const name = row.getAttribute('data-name') ?? '';
+      const category = row.getAttribute('data-category') ?? '';
+      const matchesSearch = !query || name.includes(query);
+      const matchesCategory = activeCategory === 'all' || category === activeCategory;
+      (row as HTMLElement).style.display = matchesSearch && matchesCategory ? '' : 'none';
+    });
+  }
+
+  searchInput?.addEventListener('input', filterRows);
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chips.forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeCategory = chip.getAttribute('data-category') ?? 'all';
+      filterRows();
+    });
+  });
+
+  // Handle ?q= search param
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get('q');
+  if (q && searchInput) {
+    searchInput.value = q;
+    filterRows();
+  }
+</script>

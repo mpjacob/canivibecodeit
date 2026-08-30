@@ -1,0 +1,117 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Ticker from '../components/Ticker.astro';
+import { getMrrDestroyed, getAllApps } from '../lib/apps';
+
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  jsonLd?: object | object[];
+  noTicker?: boolean;
+}
+
+const {
+  title,
+  description = 'Can you replace paid SaaS apps with one AI coding prompt? The honest directory.',
+  canonical,
+  ogImage,
+  jsonLd,
+  noTicker = false,
+} = Astro.props;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://canivibecodeit.com';
+const canonicalUrl = canonical ?? Astro.url.href;
+const ogImageUrl = ogImage ?? `${siteUrl}/og/home.png`;
+
+const mrrDestroyed = getMrrDestroyed();
+const apps = getAllApps();
+
+const jsonLdScripts = jsonLd
+  ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd])
+  : [];
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:site_name" content="Can I Vibecode It?" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {jsonLdScripts.map((ld) => (
+      <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    ))}
+  </head>
+  <body>
+    {!noTicker && <Ticker mrr={mrrDestroyed} apps={apps} />}
+    <div class="container">
+      <Header />
+      <main>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+
+    <script>
+      // Theme toggle
+      const toggle = document.getElementById('theme-toggle');
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+
+      toggle?.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        toggle.textContent = next === 'dark' ? '☀' : '☾';
+      });
+
+      if (toggle) {
+        const theme = document.documentElement.getAttribute('data-theme');
+        toggle.textContent = theme === 'dark' ? '☀' : '☾';
+      }
+
+      // Reveal on scroll
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!prefersReduced) {
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+        reveals.forEach((el) => observer.observe(el));
+      } else {
+        document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
+      }
+    </script>
+  </body>
+</html>

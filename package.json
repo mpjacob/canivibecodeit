@@ -1,0 +1,25 @@
+{
+  "name": "can-i-vibecode-it",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Can I Vibecode It? — A directory of SaaS apps you can replace with one AI coding prompt",
+  "license": "MIT",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "node ./dist/server/entry.mjs"
+  },
+  "dependencies": {
+    "@astrojs/node": "^9.1.0",
+    "@resvg/resvg-js": "^2.6.2",
+    "astro": "^5.5.0",
+    "better-sqlite3": "^11.8.1",
+    "satori": "^0.12.0",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "typescript": "^5.8.2"
+  }
+}

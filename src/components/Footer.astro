@@ -1,0 +1,58 @@
+---
+import { REBUILD_PROMPT } from '../lib/types';
+---
+
+<footer>
+  <p class="mono" style="color: var(--text-muted); font-size: 0.85rem;">
+    MIT License · No accounts · No tracking · First-party analytics only
+  </p>
+  <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-dim);">
+  Built with Astro + SQLite. This site practices what it preaches.
+  </p>
+  <details class="rebuild-link" style="margin-top: 1.5rem; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+    <summary style="cursor: pointer; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">
+      📋 The rebuild prompt (we vibecoded this)
+    </summary>
+    <pre style="margin-top: 0.75rem; font-size: 0.7rem; text-align: left; white-space: pre-wrap;">{REBUILD_PROMPT}</pre>
+  </details>
+</footer>
+
+<section style="padding: 3rem 0; text-align: center;" class="reveal">
+  <h2 style="font-size: 1.3rem; margin-bottom: 0.5rem;">Get notified when we add apps</h2>
+  <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">No spam. Just new verdicts.</p>
+  <form class="waitlist-form" id="waitlist-form">
+    <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off" />
+    <input type="email" name="email" placeholder="you@example.com" required />
+    <button type="submit" class="btn btn-primary">Join waitlist</button>
+  </form>
+  <p id="waitlist-msg" style="margin-top: 0.75rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--green); display: none;"></p>
+</section>
+
+<script>
+  const form = document.getElementById('waitlist-form') as HTMLFormElement;
+  const msg = document.getElementById('waitlist-msg') as HTMLParagraphElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const res = await fetch('/api/waitlist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: fd.get('email'),
+        website: fd.get('website'),
+      }),
+    });
+    const data = await res.json();
+    msg.style.display = 'block';
+    if (data.success) {
+      msg.textContent = '✓ You\'re on the list.';
+      form.reset();
+    } else if (data.error === 'duplicate') {
+      msg.textContent = '✓ Already on the list.';
+    } else {
+      msg.textContent = '✕ Something went wrong.';
+      msg.style.color = 'var(--red)';
+    }
+  });
+</script>

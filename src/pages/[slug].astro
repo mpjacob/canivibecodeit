@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAppBySlug, getRelatedApps, formatPrice } from '../lib/apps';
+import { VERDICT_LABELS, CATEGORY_EMOJI } from '../lib/types';
+import { getFaqItems, getShareText } from '../lib/prompts';
+import { getVoteCount } from '../lib/db';
+import { faqJsonLd, breadcrumbJsonLd, appPageJsonLd } from '../lib/seo';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/');
+}
+
+const app = getAppBySlug(slug);
+
+if (!app) {
+  return Astro.redirect('/');
+}
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://canivibecodeit.com';
+const votes = getVoteCount(app.slug);
+const related = getRelatedApps(app);
+const faqItems = getFaqItems(app);
+const shareText = getShareText(app, siteUrl);
+
+const title = `Can I vibecode ${app.name}?`;
+const description = app.notes;
+
+const jsonLd = [
+  appPageJsonLd(siteUrl, app),
+  breadcrumbJsonLd(siteUrl, [
+    { name: 'Home', url: siteUrl },
+    { name: app.name },
+  ]),
+  faqJsonLd(faqItems),
+];
+
+const agents = [
+  { id: 'claude', label: 'Claude Code' },
+  { id: 'codex', label: 'Codex' },
+  { id: 'cursor', label: 'Cursor' },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={`${siteUrl}/${app.slug}`}
+  ogImage={`${siteUrl}/og/${app.slug}.png`}
+  jsonLd={jsonLd}
+>
+  <article>
+    <div class="verdict-hero reveal">
+      <p class="mono" style="color: var(--text-muted); font-size: 0.9rem;">
+        {CATEGORY_EMOJI[app.category] ?? ''} {app.category.replace(/-/g, ' ')} · {formatPrice(app.priceMonthly)} · {app.domain}
+      </p>
+      <h1 style="font-size: clamp(1.8rem, 4vw, 2.8rem); margin: 0.5rem 0;">
+        Can I vibecode <span style="color: var(--green);">{app.name}</span>?
+      </h1>
+      <div class={`verdict-big ${app.verdict}`}>{VERDICT_LABELS[app.verdict]}</div>
+      <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto; font-size: 1.05rem;">
+        {app.notes}
+      </p>
+    </div>
+
+    <section class="reveal">
+      <h2 class="section-title">The One-Shot Prompt</h2>
+      <div class="prompt-block">
+        <div class="prompt-actions">
+          {agents.map((agent) => (
+            <button
+              class="btn copy-btn"
+              data-agent={agent.id}
+              data-prompt={app.prompt}
+            >
+              Copy for {agent.label}
+            </button>
+          ))}
+        </div>
+        <pre id="prompt-code"><code>{app.prompt}</code></pre>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2 class="section-title">What You Lose</h2>
+      <ul class="lose-list">
+        {app.whatYouLose.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </section>
+
+    {app.priorArt.length > 0 && (
+      <section class="reveal">
+        <h2 class="section-title">Prior Art</h2>
+        <ul class="prior-art-list">
+          {app.priorArt.map((item) => (
+            <li>
+              <a href={item.url} target="_blank" rel="noopener noreferrer">→ {item.title}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <section class="vote-section reveal">
+      <p style="margin-bottom: 1rem; color: var(--text-muted);">
+        Did you actually replace {app.name} with vibecoding?
+      </p>
+      <button class="btn btn-primary vote-btn" id="vote-btn" data-slug={app.slug}>
+        ☠️ I replaced this (<span id="vote-count">{votes}</span>)
+      </button>
+      <p id="vote-msg" style="margin-top: 0.75rem; font-family: var(--font-mono); font-size: 0.8rem; display: none;"></p>
+    </section>
+
+    <section class="reveal" style="text-align: center; margin: 2rem 0;">
+      <a
+        href={`https://twitter.com/intent/tweet?text=${shareText}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn"
+      >
+        Share on 𝕏
+      </a>
+    </section>
+
+    {related.length > 0 && (
+      <section class="reveal">
+        <h2 class="section-title">Related Apps</h2>
+        <div class="related-grid">
+          {related.map((r) => (
+            <a href={`/${r.slug}`} class="card related-card">
+              <h3>{r.name}</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">{formatPrice(r.priceMonthly)}</p>
+              <span class={`badge badge-${r.verdict}`}>{VERDICT_LABELS[r.verdict]}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="reveal">
+      <h2 class="section-title">FAQ</h2>
+      {faqItems.map((item) => (
+        <details class="faq-item">
+          <summary>{item.question}</summary>
+          <p class="faq-answer">{item.answer}</p>
+        </details>
+      ))}
+    </section>
+  </article>
+</BaseLayout>
+
+<script>
+  const AGENT_PREFIXES: Record<string, string> = {
+    claude: 'Run this in Claude Code. Create all files, install dependencies, and verify the build works before reporting done.\n\n',
+    codex: 'Run this in OpenAI Codex. Scaffold the project, write tests where appropriate, and ensure `npm run build` passes.\n\n',
+    cursor: 'Run this in Cursor Agent mode. Follow existing conventions, keep scope minimal, and commit when done.\n\n',
+  };
+
+  document.querySelectorAll('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const agent = btn.getAttribute('data-agent') ?? '';
+      const prompt = btn.getAttribute('data-prompt') ?? '';
+      const full = (AGENT_PREFIXES[agent] ?? '') + prompt;
+
+      try {
+        await navigator.clipboard.writeText(full);
+        btn.classList.add('copied');
+        const original = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.textContent = original;
+        }, 2000);
+      } catch {
+        btn.textContent = '✕ Failed';
+      }
+    });
+  });
+
+  const voteBtn = document.getElementById('vote-btn');
+  const voteCount = document.getElementById('vote-count');
+  const voteMsg = document.getElementById('vote-msg');
+
+  voteBtn?.addEventListener('click', async () => {
+    const slug = voteBtn.getAttribute('data-slug');
+    const res = await fetch('/api/vote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slug }),
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      voteBtn.classList.add('voted');
+      if (voteCount) voteCount.textContent = String(data.count);
+      if (voteMsg) {
+        voteMsg.style.display = 'block';
+        voteMsg.style.color = 'var(--green)';
+        voteMsg.textContent = '✓ Vote recorded. Welcome to the Death List.';
+      }
+    } else if (data.error === 'already_voted') {
+      voteBtn.classList.add('voted');
+      if (voteMsg) {
+        voteMsg.style.display = 'block';
+        voteMsg.style.color = 'var(--amber)';
+        voteMsg.textContent = 'You already voted for this one.';
+      }
+    }
+  });
+</script>

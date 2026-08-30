@@ -1,0 +1,20 @@
+{
+  "slug": "vercel",
+  "name": "Vercel",
+  "domain": "vercel.com",
+  "category": "dev-tools",
+  "priceMonthly": 20,
+  "verdict": "no",
+  "whatYouLose": [
+    "Global edge network with instant deploys",
+    "Serverless function auto-scaling",
+    "Preview deployments per PR",
+    "Analytics and Web Vitals monitoring"
+  ],
+  "priorArt": [
+    { "title": "Coolify — self-hosted PaaS", "url": "https://github.com/coollabsio/coolify" },
+    { "title": "Dokku — Docker-powered mini-Heroku", "url": "https://github.com/dokku/dokku" }
+  ],
+  "prompt": "Build a simple deployment dashboard that: connects to a GitHub repo, runs `npm run build` on push, serves the output via nginx, shows deploy history with status/logs, and supports custom domains via Caddy. Single-server, no edge network. This replaces the dashboard, not the infrastructure.",
+  "notes": "You don't vibecode a CDN. You vibecode a deploy button that shells out to git pull && npm run build."
+}

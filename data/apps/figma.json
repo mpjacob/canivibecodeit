@@ -1,0 +1,20 @@
+{
+  "slug": "figma",
+  "name": "Figma",
+  "domain": "figma.com",
+  "category": "design",
+  "priceMonthly": 15,
+  "verdict": "no",
+  "whatYouLose": [
+    "Real-time collaborative canvas with CRDT sync",
+    "Auto-layout and constraint engine",
+    "Component variants and design tokens",
+    "Dev mode and plugin ecosystem"
+  ],
+  "priorArt": [
+    { "title": "Penpot — open-source design tool", "url": "https://github.com/penpot/penpot" },
+    { "title": "Excalidraw — hand-drawn diagrams", "url": "https://github.com/excalidraw/excalidraw" }
+  ],
+  "prompt": "Build a simple vector design tool with: canvas with shapes (rect, ellipse, text), drag-to-move and resize handles, layers panel, color picker, export to PNG/SVG, and undo/redo. Use HTML Canvas or SVG. Single-user, no collaboration. This is a learning exercise — not a Figma replacement.",
+  "notes": "Figma is a decade of engineering. A basic shape editor is vibecodable; a production design tool is not."
+}

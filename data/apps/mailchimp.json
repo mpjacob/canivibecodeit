@@ -1,0 +1,20 @@
+{
+  "slug": "mailchimp",
+  "name": "Mailchimp",
+  "domain": "mailchimp.com",
+  "category": "marketing",
+  "priceMonthly": 13,
+  "verdict": "yes",
+  "whatYouLose": [
+    "Deliverability reputation and IP warming",
+    "A/B testing with statistical significance",
+    "Audience segmentation automations",
+    "CAN-SPAM compliance tooling"
+  ],
+  "priorArt": [
+    { "title": "listmonk — self-hosted newsletter", "url": "https://github.com/knadh/listmonk" },
+    { "title": "Mautic — open-source marketing automation", "url": "https://github.com/mautic/mautic" }
+  ],
+  "prompt": "Build a newsletter tool with: subscriber list management (add/remove/import CSV), WYSIWYG email editor, send via Resend or Postmark API, open/click tracking with pixel and redirect links, unsubscribe page, and a simple dashboard showing subscriber count and recent campaign stats. SQLite backend.",
+  "notes": "Newsletter sending is one of the most vibecodable SaaS categories. Deliverability is the real challenge, not the code."
+}

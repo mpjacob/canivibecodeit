@@ -1,0 +1,20 @@
+{
+  "slug": "airtable",
+  "name": "Airtable",
+  "domain": "airtable.com",
+  "category": "productivity",
+  "priceMonthly": 20,
+  "verdict": "kinda",
+  "whatYouLose": [
+    "Spreadsheet-formula engine",
+    "Linked records across tables",
+    "Views (kanban, gallery, calendar)",
+    "Automations and scripting"
+  ],
+  "priorArt": [
+    { "title": "NocoDB — open-source Airtable", "url": "https://github.com/nocodb/nocodb" },
+    { "title": "Baserow — no-code database", "url": "https://github.com/baserow/baserow" }
+  ],
+  "prompt": "Build a spreadsheet-database hybrid with: create tables with custom columns (text, number, date, select, checkbox), add/edit/delete rows inline, sort and filter columns, switch between grid and kanban view (group by select column), and CSV import/export. SQLite backend with dynamic schema per table. Clean, Airtable-inspired UI.",
+  "notes": "NocoDB and Baserow prove this is vibecodable. The formula engine and automations are where Airtable earns its price."
+}
